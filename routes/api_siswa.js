@@ -152,9 +152,18 @@ app.patch('/:id', async (req, res) => {
             })
         }
 
+        // Ambil data terbaru setelah di-update
+        const [rows] = await db.query(
+            `SELECT id, nis, nama, kelas, alamat
+             FROM siswa
+             WHERE id = ?`,
+            [id]
+        )
+
         res.json({
             status: 'Success',
-            message: 'Data siswa berhasil diperbarui'
+            message: 'Data siswa berhasil diperbarui',
+            data: rows[0]
         })
 
     } catch (error) {

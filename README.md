@@ -234,3 +234,21 @@ Jurusan	:	RPL (Rekayasa Perangkat Lunak)
 Sekolah	:	SMK Bina Putra Mandiri
 
 Tahun	:	2026/2027
+
+#### PENGETESAN API
+
+##### GET
+
+![1790395598228](image/README/1790395598228.png)
+
+##### POST
+
+![1790395793521](image/README/1790395793521.png)
+
+##### PATCH
+
+![1790396325848](image/README/1790396325848.png)
+
+##### DELETE
+
+![1790396090080](image/README/1790396090080.png)
