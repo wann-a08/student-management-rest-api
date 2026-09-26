@@ -22,10 +22,27 @@
             --warn: #FBBF24;
         }
 
+        :root[data-theme="light"] {
+            --bg: #F3F5FA;
+            --panel: #FFFFFF;
+            --panel-border: #E1E6F0;
+            --text: #131A2B;
+            --text-dim: #667085;
+            --accent: #6D4FEA;
+            --accent-2: #0E8FA8;
+            --accent-soft: rgba(109, 79, 234, 0.10);
+            --ok: #10875B;
+            --ok-bg: rgba(16, 135, 91, 0.10);
+            --danger: #D3392E;
+            --danger-bg: rgba(211, 57, 46, 0.10);
+            --warn: #B5720A;
+        }
+
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: -apple-system, "Segoe UI", Inter, Arial, sans-serif;
+            transition: background 0.2s ease, color 0.2s ease;
             background:
                 radial-gradient(circle at 15% 0%, rgba(124,92,255,0.08), transparent 40%),
                 radial-gradient(circle at 85% 20%, rgba(34,211,238,0.06), transparent 40%),
@@ -40,6 +57,14 @@
             margin: 48px auto;
         }
 
+        .page-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
         h1 {
             font-size: 26px;
             font-weight: 700;
@@ -50,8 +75,23 @@
         .subtitle {
             color: var(--text-dim);
             font-size: 14px;
-            margin-bottom: 28px;
         }
+
+        .theme-toggle {
+            background: var(--panel);
+            border: 1px solid var(--panel-border);
+            color: var(--text);
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .theme-toggle:hover { border-color: var(--accent); }
 
         .card {
             background: var(--panel);
@@ -130,6 +170,28 @@
             box-shadow: 0 0 0 3px var(--accent-soft);
         }
 
+        input.invalid {
+            border-color: var(--danger);
+        }
+
+        input.invalid:focus {
+            box-shadow: 0 0 0 3px var(--danger-bg);
+        }
+
+        .field-error {
+            font-size: 12px;
+            color: var(--danger);
+            min-height: 15px;
+            display: none;
+        }
+
+        .field-error.show { display: block; }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
         button {
             border: none;
             padding: 11px 18px;
@@ -184,6 +246,108 @@
             padding: 20px;
             color: var(--text-dim);
             display: none;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .toolbar input,
+        .toolbar select {
+            padding: 10px 12px;
+            border: 1px solid var(--panel-border);
+            border-radius: 8px;
+            font-size: 14px;
+            background: #0E1421;
+            color: var(--text);
+            outline: none;
+        }
+
+        :root[data-theme="light"] .toolbar input,
+        :root[data-theme="light"] .toolbar select {
+            background: #F8FAFC;
+        }
+
+        .toolbar input:focus,
+        .toolbar select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-soft);
+        }
+
+        .toolbar .search-field { flex: 1; }
+        .toolbar .kelas-field { width: 160px; flex-shrink: 0; }
+
+        .empty-state {
+            text-align: center;
+            padding: 28px 12px;
+            color: var(--text-dim);
+            font-size: 14px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid var(--panel-border);
+            display: block;
+        }
+
+        .avatar-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--accent-soft);
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        input[type="file"] {
+            padding: 8px;
+            font-size: 13px;
+            color: var(--text-dim);
+        }
+
+        .foto-preview-wrap { margin-top: 10px; }
+
+        .foto-preview {
+            width: 72px;
+            height: 72px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid var(--panel-border);
+            display: block;
+        }
+
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .pagination-info {
+            font-size: 13px;
+            color: var(--text-dim);
+        }
+
+        .pagination button {
+            background: var(--panel);
+            border: 1px solid var(--panel-border);
+            color: var(--text);
+            padding: 7px 14px;
+            font-weight: 500;
+        }
+
+        .pagination button:not(:disabled):hover { border-color: var(--accent); }
+
+        @media (max-width: 700px) {
+            .toolbar { flex-direction: column; }
+            .toolbar .kelas-field { width: 100%; }
         }
 
         @media (max-width: 700px) {
@@ -260,8 +424,13 @@
 
 <div class="container">
 
-    <h1>Data Siswa</h1>
-    <p class="subtitle">Kelola data siswa</p>
+    <div class="page-header">
+        <div>
+            <h1>Data Siswa</h1>
+            <p class="subtitle">Kelola data siswa</p>
+        </div>
+        <button type="button" class="theme-toggle" id="themeToggle" aria-label="Ganti tema terang/gelap">🌙</button>
+    </div>
 
     <div id="successMessage" class="message success"></div>
     <div id="errorMessage" class="message error"></div>
@@ -269,28 +438,41 @@
     <div class="card">
         <h2 id="formTitle">Tambah Siswa</h2>
 
-        <form id="siswaForm">
+        <form id="siswaForm" novalidate>
             <input type="hidden" id="siswaId">
 
             <div class="form-grid">
                 <div class="form-group">
                     <label for="nis">NIS</label>
                     <input type="number" id="nis" placeholder="Masukkan NIS" required>
+                    <span class="field-error" id="nisError"></span>
                 </div>
 
                 <div class="form-group">
                     <label for="nama">Nama</label>
                     <input type="text" id="nama" placeholder="Masukkan nama" required>
+                    <span class="field-error" id="namaError"></span>
                 </div>
 
                 <div class="form-group">
                     <label for="kelas">Kelas</label>
                     <input type="text" id="kelas" placeholder="Contoh: XI RPL" required>
+                    <span class="field-error" id="kelasError"></span>
                 </div>
 
                 <div class="form-group">
                     <label for="alamat">Alamat</label>
                     <input type="text" id="alamat" placeholder="Masukkan alamat" required>
+                    <span class="field-error" id="alamatError"></span>
+                </div>
+
+                <div class="form-group full">
+                    <label for="foto">Foto Siswa (opsional)</label>
+                    <input type="file" id="foto" accept="image/png, image/jpeg, image/webp">
+                    <span class="field-error" id="fotoError"></span>
+                    <div class="foto-preview-wrap" id="fotoPreviewWrap" style="display:none;">
+                        <img id="fotoPreview" class="foto-preview" alt="Preview foto siswa">
+                    </div>
                 </div>
             </div>
 
@@ -304,11 +486,23 @@
     <div class="card">
         <h2>Daftar Siswa</h2>
 
+        <div class="toolbar">
+            <div class="search-field">
+                <input type="text" id="searchInput" placeholder="Cari nama, NIS, atau alamat...">
+            </div>
+            <div class="kelas-field">
+                <select id="kelasFilter">
+                    <option value="">Semua Kelas</option>
+                </select>
+            </div>
+        </div>
+
         <div id="loading" class="loading">Mengambil data siswa...</div>
 
         <table>
             <thead>
                 <tr>
+                    <th>Foto</th>
                     <th class="mono">ID</th>
                     <th class="mono">NIS</th>
                     <th>Nama</th>
@@ -319,6 +513,12 @@
             </thead>
             <tbody id="siswaTable"></tbody>
         </table>
+
+        <div class="pagination" id="pagination">
+            <span class="pagination-info" id="paginationInfo"></span>
+            <button type="button" id="prevPageBtn">Sebelumnya</button>
+            <button type="button" id="nextPageBtn">Berikutnya</button>
+        </div>
     </div>
 
 </div>
