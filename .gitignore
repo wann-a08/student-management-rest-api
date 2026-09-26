@@ -1,0 +1,4 @@
+node_modules
+public/js
+public/index.html
+package-lock.json
