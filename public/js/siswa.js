@@ -18,6 +18,11 @@ const loading = document.getElementById('loading')
 const successMessage = document.getElementById('successMessage')
 const errorMessage = document.getElementById('errorMessage')
 
+const confirmModal = document.getElementById('confirmModal')
+const confirmModalText = document.getElementById('confirmModalText')
+const confirmCancelBtn = document.getElementById('confirmCancelBtn')
+const confirmDeleteBtn = document.getElementById('confirmDeleteBtn')
+
 
 // ===============================
 // PESAN
@@ -58,6 +63,57 @@ function showLoading() {
 
 function hideLoading() {
     loading.style.display = 'none'
+}
+
+
+// ===============================
+// MODAL KONFIRMASI (pengganti confirm())
+// ===============================
+
+function askConfirm(message) {
+
+    return new Promise((resolve) => {
+
+        confirmModalText.textContent = message
+
+        confirmModal.classList.add('open')
+
+        function onConfirm() {
+            cleanup()
+            resolve(true)
+        }
+
+        function onCancel() {
+            cleanup()
+            resolve(false)
+        }
+
+        function onOverlayClick(event) {
+            if (event.target === confirmModal) {
+                onCancel()
+            }
+        }
+
+        function onKeydown(event) {
+            if (event.key === 'Escape') {
+                onCancel()
+            }
+        }
+
+        function cleanup() {
+            confirmModal.classList.remove('open')
+            confirmDeleteBtn.removeEventListener('click', onConfirm)
+            confirmCancelBtn.removeEventListener('click', onCancel)
+            confirmModal.removeEventListener('click', onOverlayClick)
+            document.removeEventListener('keydown', onKeydown)
+        }
+
+        confirmDeleteBtn.addEventListener('click', onConfirm)
+        confirmCancelBtn.addEventListener('click', onCancel)
+        confirmModal.addEventListener('click', onOverlayClick)
+        document.addEventListener('keydown', onKeydown)
+
+    })
 }
 
 
@@ -139,7 +195,7 @@ function renderSiswa(data) {
 
                     <button
                         class="btn-delete"
-                        onclick="deleteSiswa(${siswa.id})"
+                        onclick="deleteSiswa(${siswa.id}, '${String(siswa.nama).replace(/'/g, "\\'")}')"
                     >
                         Hapus
                     </button>
@@ -280,11 +336,13 @@ async function editSiswa(id) {
 // HAPUS SISWA
 // ===============================
 
-async function deleteSiswa(id) {
+async function deleteSiswa(id, nama) {
 
-    const yakin = confirm(
-        'Apakah kamu yakin ingin menghapus data siswa ini?'
-    )
+    const pesan = nama
+        ? `Data siswa "${nama}" akan dihapus permanen. Lanjutkan?`
+        : 'Data siswa ini akan dihapus permanen. Lanjutkan?'
+
+    const yakin = await askConfirm(pesan)
 
     if (!yakin) {
         return
